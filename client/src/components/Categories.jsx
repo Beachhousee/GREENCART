@@ -13,8 +13,8 @@ const Categories = () => {
  onClick={()=>{
   navigate(`/products/${category.path.toLowerCase()}`)
   scrollTo(0,0)
-  
  }}>
+  
           <img 
             src={category.image} 
             alt={category.text} 
@@ -23,11 +23,11 @@ const Categories = () => {
           <p className='text-sm font-medium'>{category.text}</p>
         </div>
         ))}
-       
+       l-
       </div>
     </div>
   );
 };
 
 
-export default Categories
+export default Categories;

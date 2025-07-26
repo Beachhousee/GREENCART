@@ -98,6 +98,7 @@ export const assets = {
   bottom_banner_image_sm,
   add_address_iamge,
   box_icon,
+  
 };
 
 export const categories = [
