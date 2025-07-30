@@ -13,12 +13,14 @@ import ProductDetails from "./pages/ProductDetails";
 import Cart from "./pages/Cart";
 import AddAddress from "./pages/AddAddress";
 import MyOrders from "./pages/MyOrders";
+import SellerLogin from "./components/seller/SellerLogin";
+import SellerLayout from "./pages/seller/SellerLayout";
 
 const App = () => {
   const isSellerPath = useLocation().pathname.includes("seller");
-  const { showUserLogin } = useAppContext();
+  const { showUserLogin,isSeller } = useAppContext();
   return (
-    <div>
+    <div className="text-default min-h-screen text-gray-700 bg-white"> 
       {isSellerPath ? null : <NavBar></NavBar>}
       {showUserLogin ? <Login></Login> : null}
       <Toaster></Toaster>
@@ -44,12 +46,13 @@ const App = () => {
             element={<AddAddress></AddAddress>}
           ></Route>
           <Route path="/my-orders" element={<MyOrders></MyOrders>}></Route>
+          <Route path ='/seller' element={isSeller? <SellerLayout></SellerLayout>: <SellerLogin></SellerLogin>}></Route>
         </Routes>
       </div>
 
       {!isSellerPath && <Footer></Footer>}
     </div>
   );
-};  8                                                                                                                                                                    
+};
 
 export default App;
