@@ -1,3 +1,5 @@
+import Product from "../models/Product";
+
 //Add Product : /api/product/add
 export const addProduct = async (req, res) => {
   try {
@@ -13,6 +15,42 @@ export const addProduct = async (req, res) => {
     );
     await Product.create({ ...productData, image: imagesUrl });
     res.json({ success: true, message: "Product Added" });
+  } catch (error) {
+    console.log(error.message);
+    res.json({ success: false, message: error.message });
+  }
+};
+
+//Get all products :/api/product/list
+export const productList = async (req, res) => {
+  try {
+    const products = await Product.find({});
+    res.json({ success: true, products });
+  } catch (error) {
+    console.log(error.message);
+    res.json({ success: false, message: error.message });
+  }
+};
+
+//Getting Single Product :/api/product/id
+export const productId = async (req, res) => {
+  try {
+    const { id } = req.body;
+    const product = await Product.findById(id);
+    res.json({ success: true, products });
+  } catch (error) {
+    console.log(error.message);
+    res.json({ success: false, message: error.message });
+  }
+};
+
+
+// Change Product inStock : /api/product/stock
+export const changeStock = async (req, res) => {
+  try {
+    const { id, inStock } = req.body;
+    await Product.findByIdAndUpdate (id, { inStock });
+    res.json({ success: true, message: "Stock Updated" });
   } catch (error) {
     console.log(error.message);
     res.json({ success: false, message: error.message });
