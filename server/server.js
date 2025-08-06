@@ -1,5 +1,6 @@
 import cookieParser from 'cookie-parser';
 import express from 'express';
+import  jwt from 'jsonwebtoken';
 import cors from 'cors'
 import connectDB from './configs/db.js';
 import userRouter from './routes/userRoute.js'; 

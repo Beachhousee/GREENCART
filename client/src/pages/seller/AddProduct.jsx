@@ -1,7 +1,10 @@
 import React from "react";
+
 import { useState } from "react";
 import { assets } from "../../assets/assets";
 import { categories } from "../../assets/assets";
+import { useAppContext } from "../../context/AppContext";
+import { toast } from 'react-hot-toast';
 
 const AddProduct = () => {
   const [files, setFiles] = useState([]);
@@ -10,10 +13,40 @@ const AddProduct = () => {
   const [category, setCategory] = useState("");
   const [price, setPrice] = useState("");
   const [offerPrice, setOfferPrice] = useState("");
+  const { axios } = useAppContext();
 
-  const onSubmitHandler = async (event) => {
+ const onSubmitHandler = async (event) => {
+  try {
     event.preventDefault();
-  };
+    const productData = {
+      name,
+      description: description.split("\n"),
+      category,
+      price,
+      offerPrice,
+    };
+    const formData = new FormData();
+    formData.append("productData", JSON.stringify(productData));
+    for (let i = 0; i < files.length; i++) {
+      formData.append("images", files[i]);
+    }
+    const { data } = await axios.post('/api/product/add', formData);
+    
+    if (data.success) {
+      toast.success(data.message);
+      setName('');
+      setDescription('');
+      setCategory('');
+      setPrice('');
+      setOfferPrice('');
+      setFiles([]);
+    } else {
+      toast.error(data.message);
+    }
+  } catch (error) {
+    toast.error(error.message);
+  }
+};
   return (
     <div className="no-scrollbar flex-1 h-[95vh] overflow-y-scroll flex flex-col justify-between">
       <form
@@ -26,7 +59,7 @@ const AddProduct = () => {
             {Array(4)
               .fill("")
               .map((_, index) => (
-                <label key={index} htmlFor={`images[index]`}>
+                <label key={index} htmlFor={`images{index}`}>
                   <input
                     onChange={(e) => {
                       const updatedFiles = [...files];
@@ -56,7 +89,9 @@ const AddProduct = () => {
           <label className="text-base font-medium" htmlFor="product-name">
             Product Name
           </label>
-          <input onChange={(e)=>setName(e.target.value)} value={name}
+          <input
+            onChange={(e) => setName(e.target.value)}
+            value={name}
             id="product-name"
             type="text"
             placeholder="Type here"
@@ -71,7 +106,9 @@ const AddProduct = () => {
           >
             Product Description
           </label>
-          <textarea onChange={(e)=>setDescription(e.target.value)} value={description}
+          <textarea
+            onChange={(e) => setDescription(e.target.value)}
+            value={description}
             id="product-description"
             rows={4}
             className="outline-none md:py-2.5 py-2 px-3 rounded border border-gray-500/40 resize-none"
@@ -82,14 +119,18 @@ const AddProduct = () => {
           <label className="text-base font-medium" htmlFor="category">
             Category
           </label>
-          <select onChange={(e)=>setCategory(e.target.value)} value={category}
+          <select
+            onChange={(e) => setCategory(e.target.value)}
+            value={category}
             id="category"
             className="outline-none md:py-2.5 py-2 px-3 rounded border border-gray-500/40"
           >
             <option value="">Select Category</option>
-    {categories.map((item,index)=>(
-      <option key={index} value={item.path}>{item.path}</option>
-    ))}
+            {categories.map((item, index) => (
+              <option key={index} value={item.path}>
+                {item.path}
+              </option>
+            ))}
           </select>
         </div>
         <div className="flex items-center gap-5 flex-wrap">
@@ -97,7 +138,9 @@ const AddProduct = () => {
             <label className="text-base font-medium" htmlFor="product-price">
               Product Price
             </label>
-            <input onChange={(e)=> setPrice(e.target.value)} value={price}
+            <input
+              onChange={(e) => setPrice(e.target.value)}
+              value={price}
               id="product-price"
               type="number"
               placeholder="0"
@@ -109,7 +152,9 @@ const AddProduct = () => {
             <label className="text-base font-medium" htmlFor="offer-price">
               Offer Price
             </label>
-            <input onChange={(e)=>setOfferPrice(e.target.value)}value={offerPrice}
+            <input
+              onChange={(e) => setOfferPrice(e.target.value)}
+              value={offerPrice}
               id="offer-price"
               type="number"
               placeholder="0"
